@@ -1,6 +1,7 @@
 #include "trade.h"
 
 #include "city/resource.h"
+#include "empire/city.h"
 #include "game/resource.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
@@ -78,12 +79,20 @@ static void draw_foreground(void)
             lang_text_draw(54, 3, 340, y_offset + 61, FONT_NORMAL_WHITE);
         } else {
             resource_trade_status trade_status = city_resource_trade_status(resource);
+            int can_import = empire_can_import_resource(resource);
+            int can_export = empire_can_export_resource(resource);
             if (trade_status == TRADE_STATUS_IMPORT) {
                 lang_text_draw(54, 5, 340, y_offset + 61, FONT_NORMAL_WHITE);
             } else if (trade_status == TRADE_STATUS_EXPORT) {
                 int width = lang_text_draw(54, 6, 340, y_offset + 61, FONT_NORMAL_WHITE);
                 text_draw_number(city_resource_export_over(resource), '@', " ",
                     340 + width, y_offset + 61, FONT_NORMAL_WHITE);
+            } else if (can_import && can_export) {
+                text_draw("Can import/export", 340, y_offset + 61, FONT_NORMAL_GREEN, 0);
+            } else if (can_import) {
+                text_draw("Can import", 340, y_offset + 61, FONT_NORMAL_GREEN, 0);
+            } else if (can_export) {
+                text_draw("Can export", 340, y_offset + 61, FONT_NORMAL_GREEN, 0);
             }
         }
     }
