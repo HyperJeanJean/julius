@@ -12,6 +12,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "scenario/building.h"
 #include "window/hold_festival.h"
 
 #define ADVISOR_HEIGHT 23
@@ -78,9 +79,24 @@ static void draw_festival_info(void)
     lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305, 400, FONT_NORMAL_WHITE);
 }
 
+static void draw_disabled_building_row(int y_offset, int building_text_id)
+{
+    text_draw(" - ", 40, y_offset, FONT_NORMAL_WHITE, 0);
+    lang_text_draw(8, building_text_id, 67, y_offset, FONT_NORMAL_WHITE);
+    text_draw_centered("-", 150, y_offset, 100, FONT_NORMAL_WHITE, 0);
+    text_draw_centered("-", 230, y_offset, 100, FONT_NORMAL_WHITE, 0);
+    text_draw_centered("-", PEOPLE_OFFSET + 10, y_offset, 100, FONT_NORMAL_WHITE, 0);
+    text_draw_centered("-", COVERAGE_OFFSET, y_offset, COVERAGE_WIDTH, FONT_NORMAL_WHITE, 0);
+}
+
 static void draw_building_row(int y_offset, building_type building, 
     int building_text_id, int building_coverage, int shows, int pct_coverage)
 {
+    if (!scenario_building_allowed(building)) {
+        draw_disabled_building_row(y_offset, building_text_id + 1);
+        return;
+    }
+
     lang_text_draw_amount(8, building_text_id, building_count_total(building), 40, y_offset, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(building), 150, y_offset, 100, FONT_NORMAL_WHITE);
     text_draw_number_centered(shows, 230, y_offset, 100, FONT_NORMAL_WHITE);
@@ -99,6 +115,11 @@ static void draw_building_row(int y_offset, building_type building,
 
 static void draw_hippodrome_row(int y_offset)
 {
+    if (!scenario_building_allowed(BUILDING_HIPPODROME)) {
+        draw_disabled_building_row(y_offset, 41);
+        return;
+    }
+
     lang_text_draw_amount(8, 40, building_count_total(BUILDING_HIPPODROME), 40, y_offset, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_HIPPODROME), 150, y_offset, 100, FONT_NORMAL_WHITE);
     text_draw_number_centered(city_entertainment_hippodrome_shows(), 230, y_offset, 100, FONT_NORMAL_WHITE);

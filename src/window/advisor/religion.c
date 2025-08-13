@@ -8,6 +8,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "scenario/building.h"
 
 static int get_religion_advice(void)
 {
@@ -34,8 +35,16 @@ static void draw_god_row(god_type god, int y_offset, building_type small_temple,
 {
     lang_text_draw(59, 11 + god, 40, y_offset, FONT_NORMAL_WHITE);
     lang_text_draw(59, 16 + god, 120, y_offset + 1, FONT_SMALL_PLAIN);
-    text_draw_number_centered(building_count_total(small_temple), 230, y_offset, 50, FONT_NORMAL_WHITE);
-    text_draw_number_centered(building_count_total(large_temple), 290, y_offset, 50, FONT_NORMAL_WHITE);
+    if (scenario_building_allowed(small_temple)) {
+        text_draw_number_centered(building_count_total(small_temple), 230, y_offset, 50, FONT_NORMAL_WHITE);
+    } else {
+        text_draw_centered("-", 230, y_offset, 50, FONT_NORMAL_WHITE, 0);
+    }
+    if (scenario_building_allowed(large_temple)) {
+        text_draw_number_centered(building_count_total(large_temple), 290, y_offset, 50, FONT_NORMAL_WHITE);
+    } else {
+        text_draw_centered("-", 290, y_offset, 50, FONT_NORMAL_WHITE, 0);
+    }
     text_draw_number_centered(city_god_months_since_festival(god), 360, y_offset, 50, FONT_NORMAL_WHITE);
     int width = lang_text_draw(59, 32 + city_god_happiness(god) / 10, 460, y_offset, FONT_NORMAL_WHITE);
     int bolts = city_god_wrath_bolts(god);
@@ -80,7 +89,11 @@ static int draw_background(void)
 
     // oracles
     lang_text_draw(59, 8, 40, 166, FONT_NORMAL_WHITE);
-    text_draw_number_centered(building_count_total(BUILDING_ORACLE), 230, 166, 50, FONT_NORMAL_WHITE);
+    if (scenario_building_allowed(BUILDING_ORACLE)) {
+        text_draw_number_centered(building_count_total(BUILDING_ORACLE), 230, 166, 50, FONT_NORMAL_WHITE);
+    } else {
+        text_draw_centered("-", 230, 166, 50, FONT_NORMAL_WHITE, 0);
+    }
 
     city_gods_calculate_least_happy();
 

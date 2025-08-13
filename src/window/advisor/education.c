@@ -8,6 +8,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "scenario/building.h"
 
 #define ADVISOR_HEIGHT 16
 
@@ -52,9 +53,23 @@ static int get_education_advice(void)
     return advice_id;
 }
 
+static void draw_disabled_building_row(int y_offset, int building_text_id)
+{
+    text_draw(" - ", 40, y_offset, FONT_NORMAL_WHITE, 0);
+    lang_text_draw(8, building_text_id, 67, y_offset, FONT_NORMAL_WHITE);
+    text_draw_centered("-", 150, y_offset, 100, FONT_NORMAL_WHITE, 0);
+    text_draw_centered("-", 290, y_offset, 120, FONT_NORMAL_WHITE, 0);
+    text_draw_centered("-", 420, y_offset, 200, FONT_NORMAL_WHITE, 0);
+}
+
 static void draw_building_row(int y_offset, building_type building, 
     int building_text_id, int people_text_id, int building_coverage, int pct_coverage)
 {
+    if (!scenario_building_allowed(building)) {
+        draw_disabled_building_row(y_offset, building_text_id + 1);
+        return;
+    }
+
     lang_text_draw_amount(8, building_text_id, building_count_total(building), 40, y_offset, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(building), 150, y_offset, 100, FONT_NORMAL_WHITE);
 
