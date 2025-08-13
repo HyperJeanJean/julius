@@ -1,6 +1,7 @@
 #include "trade.h"
 
 #include "city/resource.h"
+#include "empire/city.h"
 #include "game/resource.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
@@ -84,6 +85,8 @@ static void draw_foreground(void)
                 int width = lang_text_draw(54, 6, 340, y_offset + 61, FONT_NORMAL_WHITE);
                 text_draw_number(city_resource_export_over(resource), '@', " ",
                     340 + width, y_offset + 61, FONT_NORMAL_WHITE);
+            } else if (empire_can_import_resource(resource) || empire_can_export_resource(resource)) {
+                lang_text_draw(54, 18, 340, y_offset + 61, FONT_NORMAL_GREEN);
             }
         }
     }
