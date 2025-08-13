@@ -52,6 +52,25 @@ static int get_education_advice(void)
     return advice_id;
 }
 
+static void draw_building_row(int y_offset, building_type building, 
+    int building_text_id, int people_text_id, int building_coverage, int pct_coverage)
+{
+    lang_text_draw_amount(8, building_text_id, building_count_total(building), 40, y_offset, FONT_NORMAL_WHITE);
+    text_draw_number_centered(building_count_active(building), 150, y_offset, 100, FONT_NORMAL_WHITE);
+
+    int width = text_draw_number(building_coverage * building_count_active(building), 
+        '@', " ", 280, y_offset, FONT_NORMAL_WHITE);
+    lang_text_draw(57, people_text_id, 280 + width, y_offset, FONT_NORMAL_WHITE);
+
+    if (pct_coverage == 0) {
+        lang_text_draw_centered(57, 10, 420, y_offset, 200, FONT_NORMAL_WHITE);
+    } else if (pct_coverage < 100) {
+        lang_text_draw_centered(57, pct_coverage / 10 + 11, 420, y_offset, 200, FONT_NORMAL_WHITE);
+    } else {
+        lang_text_draw_centered(57, 21, 420, y_offset, 200, FONT_NORMAL_WHITE);
+    }
+}
+
 static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
@@ -73,53 +92,9 @@ static int draw_background(void)
 
     inner_panel_draw(32, 100, 36, 4);
 
-    // schools
-    lang_text_draw_amount(8, 18, building_count_total(BUILDING_SCHOOL), 40, 105, FONT_NORMAL_WHITE);
-    text_draw_number_centered(building_count_active(BUILDING_SCHOOL), 150, 105, 100, FONT_NORMAL_WHITE);
-
-    width = text_draw_number(75 * building_count_active(BUILDING_SCHOOL), '@', " ", 280, 105, FONT_NORMAL_WHITE);
-    lang_text_draw(57, 7, 280 + width, 105, FONT_NORMAL_WHITE);
-
-    int pct_school = city_culture_coverage_school();
-    if (pct_school == 0) {
-        lang_text_draw_centered(57, 10, 420, 105, 200, FONT_NORMAL_WHITE);
-    } else if (pct_school < 100) {
-        lang_text_draw_centered(57, pct_school / 10 + 11, 420, 105, 200, FONT_NORMAL_WHITE);
-    } else {
-        lang_text_draw_centered(57, 21, 420, 105, 200, FONT_NORMAL_WHITE);
-    }
-
-    // academies
-    lang_text_draw_amount(8, 20, building_count_total(BUILDING_ACADEMY), 40, 125, FONT_NORMAL_WHITE);
-    text_draw_number_centered(building_count_active(BUILDING_ACADEMY), 150, 125, 100, FONT_NORMAL_WHITE);
-
-    width = text_draw_number(100 * building_count_active(BUILDING_ACADEMY), '@', " ", 280, 125, FONT_NORMAL_WHITE);
-    lang_text_draw(57, 8, 280 + width, 125, FONT_NORMAL_WHITE);
-
-    int pct_academy = city_culture_coverage_academy();
-    if (pct_academy == 0) {
-        lang_text_draw_centered(57, 10, 420, 125, 200, FONT_NORMAL_WHITE);
-    } else if (pct_academy < 100) {
-        lang_text_draw_centered(57, pct_academy / 10 + 11, 420, 125, 200, FONT_NORMAL_WHITE);
-    } else {
-        lang_text_draw_centered(57, 21, 420, 125, 200, FONT_NORMAL_WHITE);
-    }
-
-    // libraries
-    lang_text_draw_amount(8, 22, building_count_total(BUILDING_LIBRARY), 40, 145, FONT_NORMAL_WHITE);
-    text_draw_number_centered(building_count_active(BUILDING_LIBRARY), 150, 145, 100, FONT_NORMAL_WHITE);
-
-    width = text_draw_number(800 * building_count_active(BUILDING_LIBRARY), '@', " ", 280, 145, FONT_NORMAL_WHITE);
-    lang_text_draw(57, 9, 280 + width, 145, FONT_NORMAL_WHITE);
-
-    int pct_library = city_culture_coverage_library();
-    if (pct_library == 0) {
-        lang_text_draw_centered(57, 10, 420, 145, 200, FONT_NORMAL_WHITE);
-    } else if (pct_library < 100) {
-        lang_text_draw_centered(57, pct_library / 10 + 11, 420, 145, 200, FONT_NORMAL_WHITE);
-    } else {
-        lang_text_draw_centered(57, 21, 420, 145, 200, FONT_NORMAL_WHITE);
-    }
+    draw_building_row(105, BUILDING_SCHOOL,  18, 7,  75, city_culture_coverage_school());
+    draw_building_row(125, BUILDING_ACADEMY, 20, 8, 100, city_culture_coverage_academy());
+    draw_building_row(145, BUILDING_LIBRARY, 22, 9, 800, city_culture_coverage_library());
 
     lang_text_draw_multiline(57, 22 + get_education_advice(), 60, 180, 512, FONT_NORMAL_BLACK);
 
