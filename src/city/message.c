@@ -329,6 +329,15 @@ message_advisor city_message_get_advisor(city_message_type message_type)
 
         case MESSAGE_NOT_ENOUGH_FOOD:
         case MESSAGE_FOOD_NOT_DELIVERED:
+        case MESSAGE_POPULATION_500:
+        case MESSAGE_POPULATION_1000:
+        case MESSAGE_POPULATION_2000:
+        case MESSAGE_POPULATION_3000:
+        case MESSAGE_POPULATION_5000:
+        case MESSAGE_POPULATION_10000:
+        case MESSAGE_POPULATION_15000:
+        case MESSAGE_POPULATION_20000:
+        case MESSAGE_POPULATION_25000:
             return MESSAGE_ADVISOR_POPULATION;
 
         case MESSAGE_HEALTH_ILLNESS:
@@ -338,7 +347,49 @@ message_advisor city_message_get_advisor(city_message_type message_type)
 
         case MESSAGE_GODS_UNHAPPY:
         case MESSAGE_GODS_WRATHFUL:
+        case MESSAGE_CERES_IS_UPSET:
+        case MESSAGE_MARS_IS_UPSET:
+        case MESSAGE_MERCURY_IS_UPSET:
+        case MESSAGE_NEPTUNE_IS_UPSET:
+        case MESSAGE_VENUS_IS_UPSET:
+        case MESSAGE_WRATH_OF_CERES:
+        case MESSAGE_WRATH_OF_MARS:
+        case MESSAGE_WRATH_OF_MARS_NO_MILITARY:
+        case MESSAGE_WRATH_OF_MERCURY:
+        case MESSAGE_WRATH_OF_NEPTUNE:
+        case MESSAGE_WRATH_OF_NEPTUNE_NO_SEA_TRADE:
+        case MESSAGE_WRATH_OF_VENUS:
+        case MESSAGE_BLESSING_FROM_CERES:
+        case MESSAGE_BLESSING_FROM_MARS:
+        case MESSAGE_BLESSING_FROM_MERCURY:
+        case MESSAGE_BLESSING_FROM_NEPTUNE:
+        case MESSAGE_BLESSING_FROM_VENUS:
+        case MESSAGE_SMALL_FESTIVAL:
+        case MESSAGE_LARGE_FESTIVAL:
+        case MESSAGE_GRAND_FESTIVAL:
             return MESSAGE_ADVISOR_RELIGION;
+
+        case MESSAGE_CITY_IN_DEBT:
+        case MESSAGE_CITY_IN_DEBT_AGAIN:
+        case MESSAGE_CITY_STILL_IN_DEBT:
+            return MESSAGE_ADVISOR_FINANCIAL;
+
+        case MESSAGE_INCREASED_TRADING:
+        case MESSAGE_DECREASED_TRADING:
+        case MESSAGE_TRADE_STOPPED:
+        case MESSAGE_PRICE_INCREASED:
+        case MESSAGE_PRICE_DECREASED:
+            return MESSAGE_ADVISOR_TRADE;
+
+        case MESSAGE_WORKING_HIPPODROME:
+        case MESSAGE_WORKING_COLOSSEUM:
+            return MESSAGE_ADVISOR_ENTERTAINMENT;
+
+        case MESSAGE_PEOPLE_DISGRUNTLED:
+        case MESSAGE_PEOPLE_UNHAPPY:
+        case MESSAGE_PEOPLE_ANGRY:
+        case MESSAGE_EMIGRATION:
+            return MESSAGE_ADVISOR_CHIEF;
 
         default:
             return MESSAGE_ADVISOR_NONE;
