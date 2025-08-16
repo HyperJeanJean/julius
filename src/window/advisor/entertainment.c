@@ -150,11 +150,11 @@ static int draw_background(void)
 
     int theater_shows = city_entertainment_theater_shows();
     int amphitheater_shows = city_entertainment_amphitheater_shows();
-    int colosseum_shows = city_entertainment_theater_shows();
+    int colosseum_shows = city_entertainment_colosseum_shows();
 
     int theater_coverage = city_culture_coverage_theater();
     int amphitheater_coverage = city_culture_coverage_amphitheater();
-    int colosseum_coverage = city_culture_coverage_theater();
+    int colosseum_coverage = city_culture_coverage_colosseum();
 
     draw_building_row( 64, BUILDING_THEATER,      34,  500, theater_shows,      theater_coverage);
     draw_building_row( 84, BUILDING_AMPHITHEATER, 36,  800, amphitheater_shows, amphitheater_coverage);
