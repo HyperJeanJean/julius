@@ -92,7 +92,7 @@ static void draw_disabled_building_row(int y_offset, int building_text_id)
 static void draw_building_row(int y_offset, building_type building, 
     int building_text_id, int building_coverage, int shows, int pct_coverage)
 {
-    if (!scenario_building_allowed(building)) {
+    if (!scenario_building_allowed(building) && building_count_total(building) <= 0) {
         draw_disabled_building_row(y_offset, building_text_id + 1);
         return;
     }
@@ -115,7 +115,7 @@ static void draw_building_row(int y_offset, building_type building,
 
 static void draw_hippodrome_row(int y_offset)
 {
-    if (!scenario_building_allowed(BUILDING_HIPPODROME)) {
+    if (!scenario_building_allowed(BUILDING_HIPPODROME) && building_count_total(BUILDING_HIPPODROME) <= 0) {
         draw_disabled_building_row(y_offset, 41);
         return;
     }

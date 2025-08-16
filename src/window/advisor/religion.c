@@ -35,12 +35,12 @@ static void draw_god_row(god_type god, int y_offset, building_type small_temple,
 {
     lang_text_draw(59, 11 + god, 40, y_offset, FONT_NORMAL_WHITE);
     lang_text_draw(59, 16 + god, 120, y_offset + 1, FONT_SMALL_PLAIN);
-    if (scenario_building_allowed(small_temple)) {
+    if (scenario_building_allowed(small_temple) || building_count_total(small_temple) > 0) {
         text_draw_number_centered(building_count_total(small_temple), 230, y_offset, 50, FONT_NORMAL_WHITE);
     } else {
         text_draw_centered("-", 230, y_offset, 50, FONT_NORMAL_WHITE, 0);
     }
-    if (scenario_building_allowed(large_temple)) {
+    if (scenario_building_allowed(large_temple) || building_count_total(large_temple) > 0) {
         text_draw_number_centered(building_count_total(large_temple), 290, y_offset, 50, FONT_NORMAL_WHITE);
     } else {
         text_draw_centered("-", 290, y_offset, 50, FONT_NORMAL_WHITE, 0);
@@ -89,7 +89,7 @@ static int draw_background(void)
 
     // oracles
     lang_text_draw(59, 8, 40, 166, FONT_NORMAL_WHITE);
-    if (scenario_building_allowed(BUILDING_ORACLE)) {
+    if (scenario_building_allowed(BUILDING_ORACLE) || building_count_total(BUILDING_ORACLE) > 0) {
         text_draw_number_centered(building_count_total(BUILDING_ORACLE), 230, 166, 50, FONT_NORMAL_WHITE);
     } else {
         text_draw_centered("-", 230, 166, 50, FONT_NORMAL_WHITE, 0);

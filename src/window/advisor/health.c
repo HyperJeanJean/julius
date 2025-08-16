@@ -40,7 +40,7 @@ static void draw_disabled_building_row(int y_offset, int building_text_id)
 
 static void draw_building_row(int y_offset, building_type building, int building_text_id)
 {
-    if (!scenario_building_allowed(building)) {
+    if (!scenario_building_allowed(building) && building_count_total(building) <= 0) {
         draw_disabled_building_row(y_offset, building_text_id + 1);
         return;
     }
@@ -53,7 +53,7 @@ static void draw_building_row(int y_offset, building_type building, int building
 
 static void draw_hospital_row(int y_offset)
 {
-    if (!scenario_building_allowed(BUILDING_HOSPITAL)) {
+    if (!scenario_building_allowed(BUILDING_HOSPITAL) && building_count_total(BUILDING_HOSPITAL) <= 0) {
         draw_disabled_building_row(y_offset, 31);
         return;
     }
