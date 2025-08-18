@@ -6,6 +6,7 @@
 #include "city/festival.h"
 #include "city/gods.h"
 #include "city/houses.h"
+#include "core/string.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -81,12 +82,13 @@ static void draw_festival_info(void)
 
 static void draw_disabled_building_row(int y_offset, int building_text_id)
 {
-    text_draw(" - ", 40, y_offset, FONT_NORMAL_WHITE, 0);
+    const uint8_t *hyphen = string_from_ascii("-");
+    text_draw(hyphen, 46, y_offset, FONT_NORMAL_WHITE, 0);
     lang_text_draw(8, building_text_id, 67, y_offset, FONT_NORMAL_WHITE);
-    text_draw_centered("-", 150, y_offset, 100, FONT_NORMAL_WHITE, 0);
-    text_draw_centered("-", 230, y_offset, 100, FONT_NORMAL_WHITE, 0);
-    text_draw_centered("-", PEOPLE_OFFSET + 10, y_offset, 100, FONT_NORMAL_WHITE, 0);
-    text_draw_centered("-", COVERAGE_OFFSET, y_offset, COVERAGE_WIDTH, FONT_NORMAL_WHITE, 0);
+    text_draw_centered(hyphen, 150, y_offset, 100, FONT_NORMAL_WHITE, 0);
+    text_draw_centered(hyphen, 230, y_offset, 100, FONT_NORMAL_WHITE, 0);
+    text_draw_centered(hyphen, PEOPLE_OFFSET + 10, y_offset, 100, FONT_NORMAL_WHITE, 0);
+    text_draw_centered(hyphen, COVERAGE_OFFSET, y_offset, COVERAGE_WIDTH, FONT_NORMAL_WHITE, 0);
 }
 
 static void draw_building_row(int y_offset, building_type building, 

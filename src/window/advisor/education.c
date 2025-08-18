@@ -4,6 +4,7 @@
 #include "city/culture.h"
 #include "city/houses.h"
 #include "city/population.h"
+#include "core/string.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -55,11 +56,12 @@ static int get_education_advice(void)
 
 static void draw_disabled_building_row(int y_offset, int building_text_id)
 {
-    text_draw(" - ", 40, y_offset, FONT_NORMAL_WHITE, 0);
+    const uint8_t *hyphen = string_from_ascii("-");
+    text_draw(hyphen, 46, y_offset, FONT_NORMAL_WHITE, 0);
     lang_text_draw(8, building_text_id, 67, y_offset, FONT_NORMAL_WHITE);
-    text_draw_centered("-", 150, y_offset, 100, FONT_NORMAL_WHITE, 0);
-    text_draw_centered("-", 290, y_offset, 120, FONT_NORMAL_WHITE, 0);
-    text_draw_centered("-", 420, y_offset, 200, FONT_NORMAL_WHITE, 0);
+    text_draw_centered(hyphen, 150, y_offset, 100, FONT_NORMAL_WHITE, 0);
+    text_draw_centered(hyphen, 290, y_offset, 120, FONT_NORMAL_WHITE, 0);
+    text_draw_centered(hyphen, 420, y_offset, 200, FONT_NORMAL_WHITE, 0);
 }
 
 static void draw_building_row(int y_offset, building_type building, 
