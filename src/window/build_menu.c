@@ -5,6 +5,7 @@
 #include "building/model.h"
 #include "city/view.h"
 #include "graphics/generic_button.h"
+#include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -22,6 +23,7 @@
 #define MENU_ITEM_HEIGHT 24
 #define MENU_ITEM_WIDTH 176
 #define MENU_CLICK_MARGIN 20
+#define MENU_SEPARATOR_HEIGHT 10
 
 #define SUBMENU_NONE -1
 
@@ -175,24 +177,33 @@ static int is_fishing_button(building_type type)
 static void draw_menu_buttons(void)
 {
     int x_offset = get_sidebar_x_offset();
+    int y_offset = 0;
     int item_index = -1;
     int item_x_align = x_offset - MENU_X_OFFSET;
+    int category = 0;
     for (int i = 0; i < data.num_items; i++) {
         item_index = building_menu_next_index(data.selected_submenu, item_index);
-        label_draw(item_x_align, data.y_offset + MENU_Y_OFFSET + MENU_ITEM_HEIGHT * i, 16,
-            data.focus_button_id == i + 1 ? 1 : 2);
+        y_offset = data.y_offset + MENU_Y_OFFSET + MENU_ITEM_HEIGHT * i + MENU_SEPARATOR_HEIGHT * category;
+        if (i > 0 && building_menu_is_new_category(data.selected_submenu, item_index)) {
+            color_t separator_color = (scenario_property_climate() == CLIMATE_DESERT)
+                ? COLOR_MENU_SEPARATOR_DESERT
+                : COLOR_MENU_SEPARATOR;
+            graphics_draw_horizontal_line(item_x_align + 16, item_x_align + build_menu_buttons[i].width - 16,
+                y_offset + 2, separator_color);
+            category++;
+            y_offset += MENU_SEPARATOR_HEIGHT;
+        }
+        build_menu_buttons[i].y = MENU_ITEM_HEIGHT * i + MENU_SEPARATOR_HEIGHT * category;
+        label_draw(item_x_align, y_offset, 16, data.focus_button_id == i + 1 ? 1 : 2);
         int type = building_menu_type(data.selected_submenu, item_index);
         if (is_all_button(type)) {
-            text_draw_centered(translation_for(TR_BUILD_ALL_TEMPLES),
-                item_x_align, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
+            text_draw_centered(translation_for(TR_BUILD_ALL_TEMPLES), item_x_align, y_offset + 4,
                 MENU_ITEM_WIDTH, FONT_NORMAL_GREEN, 0);
         } else if (is_fishing_button(type)) {
-            text_draw_centered(translation_for(TR_BUILD_MENU_FISHING),
-                item_x_align, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
+            text_draw_centered(translation_for(TR_BUILD_MENU_FISHING), item_x_align, y_offset + 4,
                 MENU_ITEM_WIDTH, FONT_NORMAL_GREEN, 0);
         } else {
-            lang_text_draw_centered(28, type, item_x_align, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
-                MENU_ITEM_WIDTH, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(28, type, item_x_align, y_offset + 4, MENU_ITEM_WIDTH, FONT_NORMAL_GREEN);
         }
         if (type == BUILDING_DRAGGABLE_RESERVOIR) {
             type = BUILDING_RESERVOIR;
@@ -211,8 +222,7 @@ static void draw_menu_buttons(void)
             cost = model_get_building(BUILDING_LARGE_TEMPLE_CERES)->cost;
         }
         if (cost) {
-            text_draw_money(cost, x_offset - 82, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
-                FONT_NORMAL_GREEN);
+            text_draw_money(cost, x_offset - 82, y_offset + 4, FONT_NORMAL_GREEN);
         }
     }
 }
@@ -229,7 +239,8 @@ static int click_outside_menu(const mouse *m, int x_offset)
           (m->x < x_offset - MENU_X_OFFSET - MENU_CLICK_MARGIN ||
            m->x > x_offset + MENU_CLICK_MARGIN ||
            m->y < data.y_offset + MENU_Y_OFFSET - MENU_CLICK_MARGIN ||
-           m->y > data.y_offset + MENU_Y_OFFSET + MENU_CLICK_MARGIN + MENU_ITEM_HEIGHT * data.num_items);
+           m->y > data.y_offset + MENU_Y_OFFSET + MENU_CLICK_MARGIN +
+              build_menu_buttons[data.num_items - 1].y + MENU_ITEM_HEIGHT);
 }
 
 static int handle_build_submenu(const mouse *m)

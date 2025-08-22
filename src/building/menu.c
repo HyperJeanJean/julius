@@ -272,10 +272,23 @@ int building_menu_next_index(int submenu, int current_index)
 {
     for (int i = current_index + 1; i < BUILD_MENU_ITEM_MAX; i++) {
         if (MENU_BUILDING_TYPE[submenu][i] <= 0) {
-            return 0;
+            continue;
         }
         if (menu_enabled[submenu][i]) {
             return i;
+        }
+    }
+    return 0;
+}
+
+int building_menu_is_new_category(int submenu, int current_index)
+{
+    for (int i = current_index - 1; i >= 0; i--) {
+        if (MENU_BUILDING_TYPE[submenu][i] <= 0) {
+            return 1;
+        }
+        if (menu_enabled[submenu][i]) {
+            return 0;
         }
     }
     return 0;
