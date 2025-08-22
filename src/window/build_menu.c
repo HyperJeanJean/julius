@@ -167,6 +167,11 @@ static int is_all_button(building_type type)
            (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES);
 }
 
+static int is_fishing_button(building_type type)
+{
+    return type == BUILDING_WHARF && data.selected_submenu == BUILD_MENU_INDUSTRY;
+}
+
 static void draw_menu_buttons(void)
 {
     int x_offset = get_sidebar_x_offset();
@@ -181,6 +186,10 @@ static void draw_menu_buttons(void)
             text_draw_centered(translation_for(TR_BUILD_ALL_TEMPLES),
                 item_x_align, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
                 MENU_ITEM_WIDTH, FONT_NORMAL_GREEN, 0);
+        } else if (is_fishing_button(type)) {
+            text_draw_centered(translation_for(TR_BUILD_MENU_FISHING),
+                item_x_align, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
+                MENU_ITEM_WIDTH, FONT_NORMAL_GREEN, 0);
         } else {
             lang_text_draw_centered(28, type, item_x_align, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
                 MENU_ITEM_WIDTH, FONT_NORMAL_GREEN);
@@ -190,6 +199,9 @@ static void draw_menu_buttons(void)
         }
         int cost = model_get_building(type)->cost;
         if (type == BUILDING_FORT) {
+            cost = 0;
+        }
+        if (is_fishing_button(type)) {
             cost = 0;
         }
         if (type == BUILDING_MENU_SMALL_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES) {
@@ -275,6 +287,9 @@ static int set_submenu_for_type(building_type type)
             break;
         case BUILDING_FORT:
             data.selected_submenu = BUILD_MENU_FORTS;
+            break;
+        case BUILDING_WHARF:
+            data.selected_submenu = BUILD_MENU_FISHING;
             break;
         default:
             return 0;
