@@ -7,6 +7,7 @@
 #include "building/properties.h"
 #include "city/buildings.h"
 #include "city/finance.h"
+#include "city/resource.h"
 #include "city/view.h"
 #include "core/config.h"
 #include "figure/formation.h"
@@ -260,6 +261,13 @@ static int is_fully_blocked(int map_x, int map_y, building_type type, int buildi
         return 1;
     }
     if (type == BUILDING_PLAZA && !map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+        return 1;
+    }
+    if (type == BUILDING_ORACLE && city_resource_count(RESOURCE_MARBLE) < 2) {
+        return 1;
+    }
+    if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS
+        && city_resource_count(RESOURCE_MARBLE) < 2) {
         return 1;
     }
     if (city_finance_out_of_money()) {

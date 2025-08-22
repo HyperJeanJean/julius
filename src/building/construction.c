@@ -514,6 +514,14 @@ void building_construction_update(int x, int y, int grid_offset)
             mark_construction(x + 5, y, 5, TERRAIN_ALL, 0);
             mark_construction(x + 10, y, 5, TERRAIN_ALL, 0);
         }
+    } else if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS) {
+        if (city_resource_count(RESOURCE_MARBLE) >= 2) {
+            mark_construction(x, y, 3, TERRAIN_ALL, 0);
+        }
+    } else if (type == BUILDING_ORACLE) {
+        if (city_resource_count(RESOURCE_MARBLE) >= 2) {
+            mark_construction(x, y, 2, TERRAIN_ALL, 0);
+        }
     } else if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
         if (!map_water_determine_orientation_size2(x, y, 1, 0, 0)) {
             data.draw_as_constructing = 1;
@@ -577,12 +585,10 @@ void building_construction_place(void)
     }
     if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS
         && city_resource_count(RESOURCE_MARBLE) < 2) {
-        map_property_clear_constructing_and_deleted();
         city_warning_show(WARNING_MARBLE_NEEDED_LARGE_TEMPLE);
         return;
     }
     if (type == BUILDING_ORACLE && city_resource_count(RESOURCE_MARBLE) < 2) {
-        map_property_clear_constructing_and_deleted();
         city_warning_show(WARNING_MARBLE_NEEDED_ORACLE);
         return;
     }
