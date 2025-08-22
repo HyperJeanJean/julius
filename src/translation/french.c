@@ -23,6 +23,7 @@ static translation_string all_strings[] = {
         "Le répertoire que vous avez sélectionné ne contient pas de pack de langue valide. "
         "Veuillez consulter les erreurs dans le fichier de log."},
     {TR_BUILD_ALL_TEMPLES, "Tous"},
+    {TR_BUILD_MENU_FISHING, "Pêche"},
     {TR_BUTTON_OK, "OK"},
     {TR_BUTTON_CANCEL, "Annuler"},
     {TR_BUTTON_RESET_DEFAULTS, "Réinitialiser"},
