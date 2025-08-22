@@ -325,23 +325,26 @@ void window_building_draw_warehouse(building_info_context *c)
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else {
-        for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        const resource_list *list = city_resource_get_available();
+        for (int i = 0; i < list->size; i++) {
+            int resource = list->items[i];
             int x, y;
-            if (r <= 5) {
+            if (i < 5) {
                 x = c->x_offset + 20;
-                y = c->y_offset + 24 * (r - 1) + 36;
-            } else if (r <= 10) {
+                y = c->y_offset + 24 * i + 36;
+            } else if (i < 10) {
                 x = c->x_offset + 170;
-                y = c->y_offset + 24 * (r - 6) + 36;
+                y = c->y_offset + 24 * (i - 5) + 36;
             } else {
                 x = c->x_offset + 320;
-                y = c->y_offset + 24 * (r - 11) + 36;
+                y = c->y_offset + 24 * (i - 10) + 36;
             }
-            int amount = building_warehouse_get_amount(b, r);
-            int image_id = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+            int amount = building_warehouse_get_amount(b, resource);
+            int image_id = image_group(GROUP_RESOURCE_ICONS) + resource +
+                resource_image_offset(resource, RESOURCE_IMAGE_ICON);
             image_draw(image_id, x, y);
             int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_SMALL_PLAIN);
-            lang_text_draw(23, r, x + 24 + width, y + 7, FONT_SMALL_PLAIN);
+            lang_text_draw(23, resource, x + 24 + width, y + 7, FONT_SMALL_PLAIN);
         }
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 168, c->width_blocks - 2, 5);
