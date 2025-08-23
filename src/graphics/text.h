@@ -24,6 +24,7 @@ int text_draw_number(int value, char prefix, const char *postfix, int x_offset, 
 int text_draw_number_colored(
     int value, char prefix, const char *postfix, int x_offset, int y_offset, font_t font, color_t color);
 int text_draw_money(int value, int x_offset, int y_offset, font_t font);
+int text_draw_money_colored(int value, int x_offset, int y_offset, font_t font, color_t color);
 int text_draw_percentage(int value, int x_offset, int y_offset, font_t font);
 
 void text_draw_number_centered(int value, int x_offset, int y_offset, int box_width, font_t font);
