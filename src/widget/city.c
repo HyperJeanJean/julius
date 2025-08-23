@@ -88,8 +88,8 @@ void widget_city_draw_construction_cost_and_size(void)
         } else {
             color = COLOR_FONT_RED;
         }
-        text_draw_number_colored(cost, '@', " ", x + 58 + 1, y + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
-        text_draw_number_colored(cost, '@', " ", x + 58, y, FONT_NORMAL_PLAIN, color);
+        text_draw_money_colored(cost, x + 58 + 1, y + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
+        text_draw_money_colored(cost, x + 58, y, FONT_NORMAL_PLAIN, color);
     }
     if (has_size) {
         int width = -text_get_width(string_from_ascii("  "), FONT_SMALL_PLAIN);
