@@ -341,6 +341,20 @@ int text_draw_money(int value, int x_offset, int y_offset, font_t font)
     return text_draw(str, x_offset, y_offset, font, 0);
 }
 
+int text_draw_money_colored(int value, int x_offset, int y_offset, font_t font, color_t color)
+{
+    uint8_t str[NUMBER_BUFFER_LENGTH];
+    int money_len = number_to_string(str, value, '@', " ");
+    const uint8_t *postfix;
+    if (locale_translate_money_dn()) {
+        postfix = lang_get_string(6, 0);
+    } else {
+        postfix = string_from_ascii("Dn");
+    }
+    string_copy(postfix, str + money_len, NUMBER_BUFFER_LENGTH - money_len - 1);
+    return text_draw(str, x_offset, y_offset, font, color);
+}
+
 int text_draw_percentage(int value, int x_offset, int y_offset, font_t font)
 {
     uint8_t str[NUMBER_BUFFER_LENGTH];
