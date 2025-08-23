@@ -3,6 +3,7 @@
 #include "building/construction.h"
 #include "building/properties.h"
 #include "city/finance.h"
+#include "city/resource.h"
 #include "city/view.h"
 #include "city/warning.h"
 #include "core/direction.h"
@@ -13,6 +14,7 @@
 #include "graphics/button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -73,6 +75,7 @@ void widget_city_draw_construction_cost_and_size(void)
     }
     int size_x, size_y;
     int cost = building_construction_cost();
+    int marble = building_construction_marble();
     int has_size = building_construction_size(&size_x, &size_y);
     if (!cost && !has_size) {
         return;
@@ -80,6 +83,7 @@ void widget_city_draw_construction_cost_and_size(void)
     set_city_clip_rectangle();
     int x, y;
     city_view_get_selected_tile_pixels(&x, &y);
+    int width = 0;
     if (cost) {
         color_t color;
         if (cost <= city_finance_treasury()) {
@@ -88,11 +92,24 @@ void widget_city_draw_construction_cost_and_size(void)
         } else {
             color = COLOR_FONT_RED;
         }
-        text_draw_number_colored(cost, '@', " ", x + 58 + 1, y + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
-        text_draw_number_colored(cost, '@', " ", x + 58, y, FONT_NORMAL_PLAIN, color);
+        text_draw_money_colored(cost, x + 58 + 1, y + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
+        width = text_draw_money_colored(cost, x + 58, y, FONT_NORMAL_PLAIN, color);
+    }
+    if (marble) {
+        color_t color;
+        if (marble <= city_resource_count(RESOURCE_MARBLE)) {
+            // Color blind friendly
+            color = scenario_property_climate() == CLIMATE_DESERT ? COLOR_FONT_ORANGE : COLOR_FONT_ORANGE_LIGHT;
+        } else {
+            color = COLOR_FONT_RED;
+        }
+        text_draw_number_colored(marble, '@', "", x + 58 + width + 1, y + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
+        width += text_draw_number_colored(marble, '@', "", x + 58 + width, y, FONT_NORMAL_PLAIN, color);
+        lang_text_draw_colored(23, RESOURCE_MARBLE, x + 58 + width + 1, y + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
+        lang_text_draw_colored(23, RESOURCE_MARBLE, x + 58 + width, y, FONT_NORMAL_PLAIN, color);
     }
     if (has_size) {
-        int width = -text_get_width(string_from_ascii("  "), FONT_SMALL_PLAIN);
+        width = -text_get_width(string_from_ascii("  "), FONT_SMALL_PLAIN);
         width += text_draw_number_colored(size_x, '@', "x", x - 15 + 1, y + 25 + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
         text_draw_number_colored(size_x, '@', "x", x - 15, y + 25, FONT_SMALL_PLAIN, COLOR_FONT_YELLOW);
         text_draw_number_colored(size_y, '@', " ", x - 15 + width + 1, y + 25 + 1, FONT_SMALL_PLAIN, COLOR_BLACK);

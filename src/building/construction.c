@@ -348,6 +348,18 @@ int building_construction_cost(void)
     return data.cost_preview;
 }
 
+int building_construction_marble(void)
+{
+    building_type type = building_construction_type();
+    if (type == BUILDING_ORACLE) {
+        return 2;
+    }
+    if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS) {
+        return 2;
+    }
+    return 0;
+}
+
 int building_construction_size(int *x, int *y)
 {
     if (!config_get(CONFIG_UI_SHOW_CONSTRUCTION_SIZE) ||
