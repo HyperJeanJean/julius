@@ -45,6 +45,8 @@ static int get_next_rank(void)
 
 static void draw_background(void)
 {
+    window_draw_underlying_window();
+
     graphics_in_dialog();
 
     outer_panel_draw(48, 128, 34, 17);
