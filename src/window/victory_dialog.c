@@ -9,17 +9,21 @@
 #include "graphics/window.h"
 #include "scenario/property.h"
 #include "sound/music.h"
+#include "translation/translation.h"
+#include "window/file_dialog.h"
 #include "window/city.h"
 
 #define MAX_RANK 10
 
 static void button_accept(int param1, int param2);
 static void button_continue_governing(int months, int param2);
+static void button_save_and_accept(int param1, int param2);
 
 static generic_button victory_buttons[] = {
     {32, 112, 480, 20, button_accept, button_none, 0, 0},
     {32, 144, 480, 20, button_continue_governing, button_none, 24, 0},
     {32, 176, 480, 20, button_continue_governing, button_none, 60, 0},
+    {32, 219, 480, 20, button_save_and_accept, button_none, 0, 0},
 };
 
 static int focus_button_id = 0;
@@ -43,7 +47,7 @@ static void draw_background(void)
 {
     graphics_in_dialog();
 
-    outer_panel_draw(48, 128, 34, 15);
+    outer_panel_draw(48, 128, 34, 17);
     if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
         lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK);
         lang_text_draw_centered(62, 2, 48, 175, 544, FONT_NORMAL_BLACK);
@@ -75,6 +79,12 @@ static void draw_foreground(void)
             // Continue for 5 years
             large_label_draw(80, 304, 30, focus_button_id == 3);
             lang_text_draw_centered(62, 5, 80, 310, 480, FONT_NORMAL_GREEN);
+
+            graphics_draw_horizontal_line(100, 540, 338, COLOR_INSET_DARK);
+
+            // Save as open play
+            large_label_draw(80, 347, 30, focus_button_id == 4);
+            text_draw_centered(translation_for(TR_VICTORY_SAVE_ACCEPT_PROMOTION), 80, 353, 480, FONT_NORMAL_GREEN, 0);
         }
     } else {
         // lost
@@ -88,7 +98,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     int num_buttons;
     if (scenario_campaign_rank() >= 2 || scenario_is_custom()) {
-        num_buttons = 3;
+        num_buttons = 4;
     } else if (scenario_campaign_rank() == 1) {
         num_buttons = 2;
     } else {
@@ -108,6 +118,17 @@ static void button_continue_governing(int months, int param2)
     window_city_show();
     city_victory_reset();
     sound_music_update(1);
+}
+
+static void save_callback(int success)
+{
+    scenario_set_open_play(0);
+}
+
+static void button_save_and_accept(int param1, int param2)
+{
+    scenario_set_open_play(1);
+    window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE, save_callback);
 }
 
 void window_victory_dialog_show(void)
