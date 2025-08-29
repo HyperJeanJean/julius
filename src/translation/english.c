@@ -111,6 +111,9 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_TITLE, "Hotkey already used"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "This key combination is already assigned to the following action:"},
     {TR_WARNING_SCREENSHOT_SAVED, "Screenshot saved: "},
+    {TR_ADVISOR_TRADE_IMPORTABLE, "Importable"},
+    {TR_ADVISOR_TRADE_EXPORTABLE, "Exportable"},
+    {TR_ADVISOR_TRADE_IMPORT_EXPORT, "Import/Export"},
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
