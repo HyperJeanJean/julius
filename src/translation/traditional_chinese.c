@@ -110,6 +110,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_TITLE, "熱鍵已佔用"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "該鍵位已設定為以下功能:"},
     {TR_WARNING_SCREENSHOT_SAVED, "截圖已保存: "}, // TODO: Google translate
+    {TR_ADVISOR_TRADE_IMPORTABLE, "可進口"},
+    {TR_ADVISOR_TRADE_EXPORTABLE, "可出口"},
 };
 
 void translation_traditional_chinese(const translation_string **strings, int *num_strings)

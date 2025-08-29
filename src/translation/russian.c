@@ -110,6 +110,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_TITLE, "Горячая клавиша уже назначена"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "Эта комбинация клавиш уже назначена на следующее действие:"},
     {TR_WARNING_SCREENSHOT_SAVED, "Скриншот сохранен: "}, // TODO: Google translate
+    {TR_ADVISOR_TRADE_IMPORTABLE, "Импортируемый"},
+    {TR_ADVISOR_TRADE_EXPORTABLE, "Экспортируемый"},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)

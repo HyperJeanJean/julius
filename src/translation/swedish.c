@@ -110,6 +110,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_TITLE, "Kortkommando används redan"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "Den här knappkombinationen används redan till följande:"},
     {TR_WARNING_SCREENSHOT_SAVED, "Skärmdumpen sparad: "}, // TODO: Google translate
+    {TR_ADVISOR_TRADE_IMPORTABLE, "Importerbar"},
+    {TR_ADVISOR_TRADE_EXPORTABLE, "Exporterbar"},
 };
 
 void translation_swedish(const translation_string **strings, int *num_strings)

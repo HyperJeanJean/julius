@@ -112,6 +112,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_MESSAGE, "해당 키 조합은 이미 다음의 동작에 할당되어 있습니다:"},
     {TR_WARNING_SCREENSHOT_SAVED, "스크린샷 저장됨: "},
     {TR_FIX_KOREAN_BUILDING_DOCTORS_CLINIC, "진료소"},
+    {TR_ADVISOR_TRADE_IMPORTABLE, "수입 가능"},
+    {TR_ADVISOR_TRADE_EXPORTABLE, "수출 가능"},
 };
 
 void translation_korean(const translation_string **strings, int *num_strings)

@@ -110,6 +110,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_MESSAGE, "Ta kombinacja klawiszowa już jest wyznaczona dla tej czynności:"},
     {TR_HOTKEY_DUPLICATE_TITLE, "Klawisz już użyty"},
     {TR_WARNING_SCREENSHOT_SAVED, "Zapisano zrzut ekranu: "}, // TODO: Google translate
+    {TR_ADVISOR_TRADE_IMPORTABLE, "Importowalne"},
+    {TR_ADVISOR_TRADE_EXPORTABLE, "Eksportowalne"},
 };
 
 void translation_polish(const translation_string **strings, int *num_strings)

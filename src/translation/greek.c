@@ -111,6 +111,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_TITLE, "Το πλήκτρο συντόμευσης έχει ήδη χρησιμοποιηθεί"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "Αυτός ο συνδυασμός πλήκτρων έχει ήδη εκχωρηθεί στην ακόλουθη ενέργεια:"},
     {TR_WARNING_SCREENSHOT_SAVED, "Το στιγμιότυπο οθόνης αποθηκεύτηκε: "},
+    {TR_ADVISOR_TRADE_IMPORTABLE, "Εισαγώγιμο"},
+    {TR_ADVISOR_TRADE_EXPORTABLE, "Εξαγώγιμο"},
 };
 
 void translation_greek(const translation_string **strings, int *num_strings)
