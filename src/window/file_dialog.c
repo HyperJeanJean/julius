@@ -74,6 +74,7 @@ static struct {
     uint8_t typed_name[FILE_NAME_MAX];
     uint8_t previously_seen_typed_name[FILE_NAME_MAX];
     char selected_file[FILE_NAME_MAX];
+    void (*callback)(int);
 } data;
 
 static input_box file_name_input = {144, 80, 20, 2, FONT_NORMAL_WHITE, 0, data.typed_name, FILE_NAME_MAX};
@@ -119,11 +120,12 @@ static void scroll_to_typed_text(void)
     }
 }
 
-static void init(file_type type, file_dialog_type dialog_type)
+static void init(file_type type, file_dialog_type dialog_type, void (*callback)(int))
 {
     data.type = type;
     data.file_data = type == FILE_TYPE_SCENARIO ? &scenario_data : &saved_game_data;
     data.dialog_type = dialog_type;
+    data.callback = callback;
 
     data.message_not_exist_start_time = 0;
     data.double_click = 0;
@@ -219,6 +221,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
     if (input_go_back_requested(m, h)) {
+        if (data.callback) {
+            data.callback(0);
+        }
         input_box_stop(&file_name_input);
         window_go_back();
     }
@@ -250,6 +255,9 @@ static const char *get_chosen_filename(void)
 static void button_ok_cancel(int is_ok, int param2)
 {
     if (!is_ok) {
+        if (data.callback) {
+            data.callback(0);
+        }
         input_box_stop(&file_name_input);
         window_go_back();
         return;
@@ -264,6 +272,9 @@ static void button_ok_cancel(int is_ok, int param2)
     if (data.dialog_type == FILE_DIALOG_LOAD) {
         if (data.type == FILE_TYPE_SAVED_GAME) {
             if (game_file_load_saved_game(filename)) {
+                if (data.callback) {
+                    data.callback(1);
+                }
                 input_box_stop(&file_name_input);
                 window_city_show();
             } else {
@@ -272,6 +283,9 @@ static void button_ok_cancel(int is_ok, int param2)
             }
         } else if (data.type == FILE_TYPE_SCENARIO) {
             if (game_file_editor_load_scenario(filename)) {
+                if (data.callback) {
+                    data.callback(1);
+                }
                 input_box_stop(&file_name_input);
                 window_editor_map_show();
             } else {
@@ -283,13 +297,22 @@ static void button_ok_cancel(int is_ok, int param2)
         input_box_stop(&file_name_input);
         if (data.type == FILE_TYPE_SAVED_GAME) {
             game_file_write_saved_game(filename);
+            if (data.callback) {
+                data.callback(1);
+            }
             window_city_show();
         } else if (data.type == FILE_TYPE_SCENARIO) {
             game_file_editor_write_scenario(filename);
+            if (data.callback) {
+                data.callback(1);
+            }
             window_editor_map_show();
         }
     } else if (data.dialog_type == FILE_DIALOG_DELETE) {
         if (game_file_delete_saved_game(filename)) {
+            if (data.callback) {
+                data.callback(1);
+            }
             dir_find_files_with_extension(data.file_data->extension);
             if (scrollbar.scroll_position + NUM_FILES_IN_VIEW >= data.file_list->num_files) {
                 --scrollbar.scroll_position;
@@ -324,7 +347,7 @@ static void button_select_file(int index, int param2)
     }
 }
 
-void window_file_dialog_show(file_type type, file_dialog_type dialog_type)
+void window_file_dialog_show(file_type type, file_dialog_type dialog_type, void (*callback)(int success))
 {
     window_type window = {
         WINDOW_FILE_DIALOG,
@@ -332,6 +355,6 @@ void window_file_dialog_show(file_type type, file_dialog_type dialog_type)
         draw_foreground,
         handle_input
     };
-    init(type, dialog_type);
+    init(type, dialog_type, callback);
     window_show(&window);
 }

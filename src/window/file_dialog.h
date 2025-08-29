@@ -12,6 +12,6 @@ typedef enum {
     FILE_TYPE_SCENARIO = 1
 } file_type;
 
-void window_file_dialog_show(file_type type, file_dialog_type dialog_type);
+void window_file_dialog_show(file_type type, file_dialog_type dialog_type, void (*callback)(int success));
 
 #endif // WINDOW_FILE_DIALOG_H
