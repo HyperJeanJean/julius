@@ -110,6 +110,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_TITLE, "Tastenkombination bereits in Verwendung"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "Diese Tastenkombination ist bereits folgender Aktion zugewiesen:"},
     {TR_WARNING_SCREENSHOT_SAVED, "Screenshot gespeichert: "}, // TODO: Google translate
+    {TR_ADVISOR_TRADE_IMPORTABLE, "Importierbar"},
+    {TR_ADVISOR_TRADE_EXPORTABLE, "Exportierbar"},
 };
 
 void translation_german(const translation_string **strings, int *num_strings)
