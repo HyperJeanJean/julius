@@ -93,6 +93,11 @@ int scenario_is_open_play(void)
     return scenario.is_open_play;
 }
 
+void scenario_set_open_play(int open_play)
+{
+    scenario.is_open_play = open_play;
+}
+
 int scenario_open_play_id(void)
 {
     return scenario.open_play_scenario_id;

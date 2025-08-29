@@ -41,6 +41,8 @@ void scenario_restore_campaign_player_name(void);
 
 int scenario_is_open_play(void);
 
+void scenario_set_open_play(int open_play);
+
 int scenario_open_play_id(void);
 
 scenario_climate scenario_property_climate(void);
