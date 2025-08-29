@@ -114,6 +114,7 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_TRADE_IMPORTABLE, "Importable"},
     {TR_ADVISOR_TRADE_EXPORTABLE, "Exportable"},
     {TR_ADVISOR_TRADE_IMPORT_EXPORT, "Import/Export"},
+    {TR_VICTORY_SAVE_ACCEPT_PROMOTION, "Sauvegarder et accepter la promotion"},
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
