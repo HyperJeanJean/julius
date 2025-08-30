@@ -145,6 +145,7 @@ int window_build_menu_image(void)
         case BUILD_MENU_FARMS:
         case BUILD_MENU_RAW_MATERIALS:
         case BUILD_MENU_WORKSHOPS:
+        case BUILD_MENU_FISHING:
             return image_base + 9;
     }
 }
