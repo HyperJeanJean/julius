@@ -164,9 +164,6 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
                 continue;
             }
             int trade_max = trade_route_limit(city->route_id, resource);
-            if (trade_max <= 0) {
-                continue;
-            }
             draw_trade_resource(resource, trade_max, x_offset + 104 * index + 120, y_offset + 31);
             int trade_now = trade_route_traded(city->route_id, resource);
             if (trade_now > trade_max) {
@@ -188,9 +185,6 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
                 continue;
             }
             int trade_max = trade_route_limit(city->route_id, resource);
-            if (trade_max <= 0) {
-                continue;
-            }
             draw_trade_resource(resource, trade_max, x_offset + 104 * index + 120, y_offset + 62);
             int trade_now = trade_route_traded(city->route_id, resource);
             if (trade_now > trade_max) {
@@ -211,9 +205,6 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
                 continue;
             }
             int trade_max = trade_route_limit(city->route_id, resource);
-            if (trade_max <= 0) {
-                continue;
-            }
             draw_trade_resource(resource, trade_max, x_offset + index + 60, y_offset + 33);
             index += 32;
         }
@@ -223,9 +214,6 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
                 continue;
             }
             int trade_max = trade_route_limit(city->route_id, resource);
-            if (trade_max <= 0) {
-                continue;
-            }
             draw_trade_resource(resource, trade_max, x_offset + index + 110, y_offset + 33);
             index += 32;
         }
@@ -527,9 +515,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
                     // we only want to handle resource buttons that the selected city trades
                     for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
-                        if (trade_route_limit(city->route_id, resource) <= 0) {
-                            continue;
-                        }
                         if (empire_object_city_sells_resource(obj->id, resource)) {
                             generic_buttons_handle_mouse(m, x_offset + 120 + 104 * index_sell, y_offset + 31,
                                 generic_button_trade_resource + resource - 1, 1, &button_id);
@@ -585,7 +570,7 @@ static int get_tooltip_resource(tooltip_context *c)
     
     int item_offset = lang_text_get_width(47, 5, FONT_NORMAL_GREEN);
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (empire_object_city_sells_resource(object_id, r) && trade_route_limit(city->route_id, r) > 0) {
+        if (empire_object_city_sells_resource(object_id, r)) {
             if (is_mouse_hit(c, x_offset + 60 + item_offset, y_offset + 33, 26)) {
                 return r;
             }
@@ -594,7 +579,7 @@ static int get_tooltip_resource(tooltip_context *c)
     }
     item_offset += lang_text_get_width(47, 4, FONT_NORMAL_GREEN);
     for (int r = RESOURCE_MIN; r <= RESOURCE_MAX; r++) {
-        if (empire_object_city_buys_resource(object_id, r) && trade_route_limit(city->route_id, r) > 0) {
+        if (empire_object_city_buys_resource(object_id, r)) {
             if (is_mouse_hit(c, x_offset + 110 + item_offset, y_offset + 33, 26)) {
                 return r;
             }
