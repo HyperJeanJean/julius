@@ -20,7 +20,7 @@
 #define MENU_X_OFFSET 266
 #define MENU_Y_OFFSET 110
 #define MENU_ITEM_HEIGHT 24
-#define MENU_ITEM_WIDTH 176
+#define MENU_ITEM_WIDTH 256
 #define MENU_CLICK_MARGIN 20
 
 #define SUBMENU_NONE -1
@@ -186,14 +186,14 @@ static void draw_menu_buttons(void)
         if (is_all_button(type)) {
             text_draw_centered(translation_for(TR_BUILD_ALL_TEMPLES),
                 item_x_align, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
-                MENU_ITEM_WIDTH, FONT_NORMAL_GREEN, 0);
+                MENU_ITEM_WIDTH - 80, FONT_NORMAL_GREEN, 0);
         } else if (is_fishing_button(type)) {
             text_draw_centered(translation_for(TR_BUILD_MENU_FISHING),
                 item_x_align, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
-                MENU_ITEM_WIDTH, FONT_NORMAL_GREEN, 0);
+                MENU_ITEM_WIDTH - 80, FONT_NORMAL_GREEN, 0);
         } else {
             lang_text_draw_centered(28, type, item_x_align, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
-                MENU_ITEM_WIDTH, FONT_NORMAL_GREEN);
+                MENU_ITEM_WIDTH - 80, FONT_NORMAL_GREEN);
         }
         if (type == BUILDING_DRAGGABLE_RESERVOIR) {
             type = BUILDING_RESERVOIR;
