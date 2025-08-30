@@ -336,6 +336,9 @@ static void draw_background_normal(void)
         // Back button text
         lang_text_draw(12, 0,
             data.x + 52, data.y + BLOCK_SIZE * msg->height_blocks - 31, FONT_NORMAL_BLACK);
+    } else if (player_message.message_advisor) {
+        lang_text_draw(142, 2,
+            data.x + 52, data.y + BLOCK_SIZE * msg->height_blocks - 31, FONT_NORMAL_BLACK);
     }
 }
 
