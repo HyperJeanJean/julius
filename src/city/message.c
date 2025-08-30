@@ -310,6 +310,7 @@ message_advisor city_message_get_advisor(city_message_type message_type)
         case MESSAGE_ENEMIES_AT_THE_DOOR:
             return MESSAGE_ADVISOR_MILITARY;
 
+        case MESSAGE_CAESAR_WRATH:
         case MESSAGE_CAESAR_REQUESTS_GOODS:
         case MESSAGE_CAESAR_REQUESTS_MONEY:
         case MESSAGE_CAESAR_REQUESTS_ARMY:
@@ -359,11 +360,6 @@ message_advisor city_message_get_advisor(city_message_type message_type)
         case MESSAGE_WRATH_OF_NEPTUNE:
         case MESSAGE_WRATH_OF_NEPTUNE_NO_SEA_TRADE:
         case MESSAGE_WRATH_OF_VENUS:
-        case MESSAGE_BLESSING_FROM_CERES:
-        case MESSAGE_BLESSING_FROM_MARS:
-        case MESSAGE_BLESSING_FROM_MERCURY:
-        case MESSAGE_BLESSING_FROM_NEPTUNE:
-        case MESSAGE_BLESSING_FROM_VENUS:
         case MESSAGE_SMALL_FESTIVAL:
         case MESSAGE_LARGE_FESTIVAL:
         case MESSAGE_GRAND_FESTIVAL:
@@ -388,6 +384,7 @@ message_advisor city_message_get_advisor(city_message_type message_type)
         case MESSAGE_PEOPLE_DISGRUNTLED:
         case MESSAGE_PEOPLE_UNHAPPY:
         case MESSAGE_PEOPLE_ANGRY:
+        case MESSAGE_TUTORIAL_TAXES_INDUSTRY:
         case MESSAGE_EMIGRATION:
             return MESSAGE_ADVISOR_CHIEF;
 
