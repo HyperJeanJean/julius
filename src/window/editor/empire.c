@@ -209,11 +209,11 @@ static void draw_city_info(const empire_city *city)
     int width = lang_text_draw(21, city->name_id, x_offset, y_offset, FONT_NORMAL_WHITE);
 
     switch (city->type) {
+        case EMPIRE_CITY_FUTURE_TRADE:
         case EMPIRE_CITY_DISTANT_ROMAN:
         case EMPIRE_CITY_VULNERABLE_ROMAN:
             lang_text_draw(47, 12, x_offset + 20 + width, y_offset, FONT_NORMAL_GREEN);
             break;
-        case EMPIRE_CITY_FUTURE_TRADE:
         case EMPIRE_CITY_DISTANT_FOREIGN:
         case EMPIRE_CITY_FUTURE_ROMAN:
             lang_text_draw(47, 0, x_offset + 20 + width, y_offset, FONT_NORMAL_GREEN);

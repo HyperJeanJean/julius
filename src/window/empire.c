@@ -232,6 +232,7 @@ static void draw_city_info(const empire_object *object)
 
     const empire_city *city = empire_city_get(data.selected_city);
     switch (city->type) {
+        case EMPIRE_CITY_FUTURE_TRADE:
         case EMPIRE_CITY_DISTANT_ROMAN:
             lang_text_draw_centered(47, 12, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
             break;
@@ -242,7 +243,6 @@ static void draw_city_info(const empire_object *object)
                 lang_text_draw_centered(47, 13, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
             }
             break;
-        case EMPIRE_CITY_FUTURE_TRADE:
         case EMPIRE_CITY_DISTANT_FOREIGN:
         case EMPIRE_CITY_FUTURE_ROMAN:
             lang_text_draw_centered(47, 0, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
