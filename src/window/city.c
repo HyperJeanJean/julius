@@ -24,6 +24,7 @@
 #include "map/grid.h"
 #include "scenario/building.h"
 #include "scenario/criteria.h"
+#include "scenario/property.h"
 #include "widget/city.h"
 #include "widget/city_with_overlay.h"
 #include "widget/top_menu.h"
@@ -67,7 +68,7 @@ static void draw_paused_banner(void)
 
 static void draw_time_left(void)
 {
-    if (scenario_criteria_time_limit_enabled() && !city_victory_has_won()) {
+    if (scenario_criteria_time_limit_enabled() && !city_victory_has_won() && !scenario_is_open_play()) {
         int years;
         if (scenario_criteria_max_year() <= game_time_year() + 1) {
             years = 0;
@@ -78,7 +79,7 @@ static void draw_time_left(void)
         label_draw(1, 25, 15, 1);
         int width = lang_text_draw(6, 2, 6, 29, FONT_NORMAL_BLACK);
         text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
-    } else if (scenario_criteria_survival_enabled() && !city_victory_has_won()) {
+    } else if (scenario_criteria_survival_enabled() && !city_victory_has_won() && !scenario_is_open_play()) {
         int years;
         if (scenario_criteria_max_year() <= game_time_year() + 1) {
             years = 0;
