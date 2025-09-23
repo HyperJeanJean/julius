@@ -20,7 +20,7 @@
 #define MENU_X_OFFSET 266
 #define MENU_Y_OFFSET 110
 #define MENU_ITEM_HEIGHT 24
-#define MENU_ITEM_WIDTH 176
+#define MENU_ITEM_WIDTH 256
 #define MENU_CLICK_MARGIN 20
 
 #define SUBMENU_NONE -1
@@ -71,16 +71,45 @@ static const int Y_MENU_OFFSETS[] = {
 static struct {
     build_menu_group selected_submenu;
     int num_items;
+    int parent_menu;
     int y_offset;
 
     int focus_button_id;
 } data = {SUBMENU_NONE};
 
+static build_menu_group get_parent_menu(build_menu_group submenu)
+{
+    switch (submenu) {
+        case BUILD_MENU_FARMS:
+        case BUILD_MENU_RAW_MATERIALS:
+        case BUILD_MENU_WORKSHOPS:
+        case BUILD_MENU_FISHING:
+            return BUILD_MENU_INDUSTRY;
+        case BUILD_MENU_FORTS:
+            return BUILD_MENU_SECURITY;
+        case BUILD_MENU_SMALL_TEMPLES:
+        case BUILD_MENU_LARGE_TEMPLES:
+            return BUILD_MENU_TEMPLES;
+        default:
+            return SUBMENU_NONE;
+    }
+}
+
+static int get_num_buttons(void)
+{
+    int num_buttons = data.num_items;
+    if (data.parent_menu != SUBMENU_NONE) {
+        num_buttons++;
+    }
+    return num_buttons;
+}
+
 static int init(build_menu_group submenu)
 {
     data.selected_submenu = submenu;
     data.num_items = building_menu_count_items(submenu);
-    data.y_offset = Y_MENU_OFFSETS[data.num_items];
+    data.parent_menu = get_parent_menu(submenu);
+    data.y_offset = Y_MENU_OFFSETS[get_num_buttons()];
     if (submenu == BUILD_MENU_VACANT_HOUSE ||
         submenu == BUILD_MENU_CLEAR_LAND ||
         submenu == BUILD_MENU_ROAD) {
@@ -186,14 +215,14 @@ static void draw_menu_buttons(void)
         if (is_all_button(type)) {
             text_draw_centered(translation_for(TR_BUILD_ALL_TEMPLES),
                 item_x_align, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
-                MENU_ITEM_WIDTH, FONT_NORMAL_GREEN, 0);
+                MENU_ITEM_WIDTH - 80, FONT_NORMAL_GREEN, 0);
         } else if (is_fishing_button(type)) {
             text_draw_centered(translation_for(TR_BUILD_MENU_FISHING),
                 item_x_align, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
-                MENU_ITEM_WIDTH, FONT_NORMAL_GREEN, 0);
+                MENU_ITEM_WIDTH - 80, FONT_NORMAL_GREEN, 0);
         } else {
             lang_text_draw_centered(28, type, item_x_align, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
-                MENU_ITEM_WIDTH, FONT_NORMAL_GREEN);
+                MENU_ITEM_WIDTH - 80, FONT_NORMAL_GREEN);
         }
         if (type == BUILDING_DRAGGABLE_RESERVOIR) {
             type = BUILDING_RESERVOIR;
@@ -216,6 +245,12 @@ static void draw_menu_buttons(void)
                 FONT_NORMAL_GREEN);
         }
     }
+    if (data.parent_menu != SUBMENU_NONE) {
+        label_draw(item_x_align, data.y_offset + MENU_Y_OFFSET + MENU_ITEM_HEIGHT * data.num_items, 16,
+            data.focus_button_id == data.num_items + 1 ? 1 : 2);
+        lang_text_draw_centered(12, 0, item_x_align, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * data.num_items,
+                MENU_ITEM_WIDTH, FONT_NORMAL_GREEN);
+    }
 }
 
 static void draw_foreground(void)
@@ -230,14 +265,14 @@ static int click_outside_menu(const mouse *m, int x_offset)
           (m->x < x_offset - MENU_X_OFFSET - MENU_CLICK_MARGIN ||
            m->x > x_offset + MENU_CLICK_MARGIN ||
            m->y < data.y_offset + MENU_Y_OFFSET - MENU_CLICK_MARGIN ||
-           m->y > data.y_offset + MENU_Y_OFFSET + MENU_CLICK_MARGIN + MENU_ITEM_HEIGHT * data.num_items);
+           m->y > data.y_offset + MENU_Y_OFFSET + MENU_CLICK_MARGIN + MENU_ITEM_HEIGHT * get_num_buttons());
 }
 
 static int handle_build_submenu(const mouse *m)
 {
     return generic_buttons_handle_mouse(
         m, get_sidebar_x_offset() - MENU_X_OFFSET, data.y_offset + MENU_Y_OFFSET,
-               build_menu_buttons, data.num_items, &data.focus_button_id);
+               build_menu_buttons, get_num_buttons(), &data.focus_button_id);
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
@@ -253,6 +288,18 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
+static void button_back(void)
+{
+    if (data.parent_menu == SUBMENU_NONE) {
+        return;
+    }
+    data.selected_submenu = data.parent_menu;
+    data.num_items = building_menu_count_items(data.selected_submenu);
+    data.parent_menu = get_parent_menu(data.selected_submenu);
+    data.y_offset = Y_MENU_OFFSETS[get_num_buttons()];
+    building_construction_clear_type();
+}
+
 static int button_index_to_submenu_item(int index)
 {
     int item = -1;
@@ -264,7 +311,11 @@ static int button_index_to_submenu_item(int index)
 
 static void button_menu_index(int param1, int param2)
 {
-    button_menu_item(button_index_to_submenu_item(param1 - 1));
+    if (param1 == data.num_items + 1) {
+        button_back();
+    } else {
+        button_menu_item(button_index_to_submenu_item(param1 - 1));
+    }
 }
 
 static int set_submenu_for_type(building_type type)
@@ -307,7 +358,8 @@ static void button_menu_item(int item)
 
     if (set_submenu_for_type(type)) {
         data.num_items = building_menu_count_items(data.selected_submenu);
-        data.y_offset = Y_MENU_OFFSETS[data.num_items];
+        data.parent_menu = get_parent_menu(data.selected_submenu);
+        data.y_offset = Y_MENU_OFFSETS[get_num_buttons()];
         building_construction_clear_type();
     } else {
         data.selected_submenu = SUBMENU_NONE;
