@@ -113,7 +113,7 @@ static void draw_foreground(void)
                 lang_text_draw(54, 9, 98 + width, 172, FONT_NORMAL_BLACK);
             }
         }
-    } else {
+    } else if(empire_can_import_resource_potentially(data.resource)) {
         // we cannot produce this good
         lang_text_draw(54, 25, 98, 172, FONT_NORMAL_BLACK);
     }
