@@ -84,6 +84,59 @@ static const int RESERVOIR_GRID_OFFSETS[4] = {OFFSET(-1,-1), OFFSET(1,-1), OFFSE
 static const int HIPPODROME_X_VIEW_OFFSETS[4] = {150, 150, -150, -150};
 static const int HIPPODROME_Y_VIEW_OFFSETS[4] = {75, -75, -75, 75};
 
+#define FARM_TILE_NOTHING  0
+#define FARM_TILE_BUILDING 1
+#define FARM_TILE_FIELDS   2
+
+static const int FARM_TILES[4][9] = {
+    {
+        FARM_TILE_BUILDING,
+        FARM_TILE_NOTHING, FARM_TILE_NOTHING, FARM_TILE_NOTHING,
+        FARM_TILE_FIELDS, FARM_TILE_FIELDS, FARM_TILE_FIELDS, FARM_TILE_FIELDS, FARM_TILE_FIELDS
+    },
+    {
+        FARM_TILE_FIELDS,
+        FARM_TILE_BUILDING, FARM_TILE_FIELDS, FARM_TILE_NOTHING,
+        FARM_TILE_NOTHING, FARM_TILE_FIELDS, FARM_TILE_NOTHING, FARM_TILE_FIELDS, FARM_TILE_FIELDS
+    },
+    {
+        FARM_TILE_FIELDS,
+        FARM_TILE_FIELDS, FARM_TILE_FIELDS, FARM_TILE_BUILDING,
+        FARM_TILE_FIELDS, FARM_TILE_FIELDS, FARM_TILE_NOTHING, FARM_TILE_NOTHING, FARM_TILE_NOTHING
+    },
+    {
+        FARM_TILE_FIELDS,
+        FARM_TILE_FIELDS, FARM_TILE_BUILDING, FARM_TILE_NOTHING,
+        FARM_TILE_FIELDS, FARM_TILE_NOTHING, FARM_TILE_FIELDS, FARM_TILE_NOTHING, FARM_TILE_FIELDS
+    },
+};
+
+#define WAREHOUSE_TILE_BUILDING 1
+#define WAREHOUSE_TILE_SPACE    2
+
+static const int WAREHOUSE_TILES[4][9] = {
+    {
+        WAREHOUSE_TILE_BUILDING,
+        WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE,
+        WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE
+    },
+    {
+        WAREHOUSE_TILE_SPACE,
+        WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE,
+        WAREHOUSE_TILE_BUILDING, WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE
+    },
+    {
+        WAREHOUSE_TILE_SPACE,
+        WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE,
+        WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_BUILDING
+    },
+    {
+        WAREHOUSE_TILE_SPACE,
+        WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE,
+        WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_BUILDING, WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE, WAREHOUSE_TILE_SPACE
+    },
+};
+
 #define RESERVOIR_RANGE_MAX_TILES 520
 
 static struct {
@@ -144,18 +197,27 @@ static void draw_fountain_range(int x, int y, int grid_offset)
 static void draw_regular_building(building_type type, int image_id, int x, int y, int grid_offset)
 {
     if (building_is_farm(type)) {
-        draw_building(image_id, x, y);
-        // fields
-        for (int i = 4; i < 9; i++) {
-            image_draw_isometric_footprint(image_id + 1,
-                x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
+        for (int i = 0; i < 9; i++) {
+            int tile = FARM_TILES[city_view_orientation() / 2][i];
+            if (tile == FARM_TILE_BUILDING) {
+                draw_building(image_id, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
+            } else if (tile == FARM_TILE_FIELDS) {
+                // fields
+                image_draw_isometric_footprint(image_id + 1,
+                    x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
+            }
         }
     } else if (type == BUILDING_WAREHOUSE) {
-        draw_building(image_id, x, y);
-        image_draw_masked(image_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42, COLOR_MASK_GREEN);
         int image_id_space = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
-        for (int i = 1; i < 9; i++) {
-            draw_building(image_id_space, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
+        for (int i = 0; i < 9; i++) {
+            int tile = WAREHOUSE_TILES[city_view_orientation() / 2][i];
+            if (tile == WAREHOUSE_TILE_BUILDING) {
+                draw_building(image_id, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
+                image_draw_masked(image_group(GROUP_BUILDING_WAREHOUSE) + 17,
+                    x - 4 + X_VIEW_OFFSETS[i], y - 42 + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
+            } else if (tile == WAREHOUSE_TILE_SPACE) {
+                draw_building(image_id_space, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
+            }
         }
     } else if (type == BUILDING_GRANARY) {
         image_draw_isometric_footprint(image_id, x, y, COLOR_MASK_GREEN);
