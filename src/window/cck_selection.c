@@ -4,7 +4,9 @@
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/image_group.h"
+#include "core/string.h"
 #include "game/file.h"
+#include "game/settings.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -20,12 +22,14 @@
 #include "scenario/map.h"
 #include "scenario/property.h"
 #include "sound/music.h"
+#include "widget/input_box.h"
 #include "widget/scenario_minimap.h"
 #include "window/city.h"
 
 #include <string.h>
 
 #define MAX_SCENARIOS 15
+#define PLAYER_NAME_LENGTH 32
 
 static void button_select_item(int index, int param2);
 static void button_start_scenario(int param1, int param2);
@@ -33,7 +37,7 @@ static void button_toggle_minimap(int param1, int param2);
 static void on_scroll(void);
 
 static image_button start_button =
-    {600, 440, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_start_scenario, button_none, 1, 0, 1};
+    {600, 434, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_start_scenario, button_none, 1, 0, 1};
 
 static generic_button toggle_minimap_button =
     {570, 87, 39, 28, button_toggle_minimap, button_none, 0, 0};
@@ -58,6 +62,10 @@ static generic_button file_buttons[] = {
 
 static scrollbar_type scrollbar = {276, 210, 256, 260, MAX_SCENARIOS, on_scroll, 1, 8, 1};
 
+static uint8_t player_name[PLAYER_NAME_LENGTH];
+
+static input_box player_name_input = {325, 431, 17, 2, FONT_NORMAL_WHITE, 1, player_name, PLAYER_NAME_LENGTH};
+
 static struct {
     int focus_button_id;
     int focus_toggle_button;
@@ -77,6 +85,8 @@ static void init(void)
     data.focus_toggle_button = 0;
     data.show_minimap = 0;
     button_select_item(0, 0);
+    string_copy(setting_player_name(), player_name, PLAYER_NAME_LENGTH);
+    input_box_start(&player_name_input);
     scrollbar_init(&scrollbar, 0, data.scenarios->num_files);
 }
 
@@ -203,7 +213,6 @@ static void draw_scenario_info(void)
             }
         }
     }
-    lang_text_draw_centered(44, 136, scenario_info_x, 446, scenario_info_width, FONT_NORMAL_BLACK);
 }
 
 static void draw_background(void)
@@ -219,6 +228,7 @@ static void draw_background(void)
 static void draw_foreground(void)
 {
     graphics_in_dialog();
+    input_box_draw(&player_name_input);
     image_buttons_draw(0, 0, &start_button, 1);
     button_border_draw(
         toggle_minimap_button.x, toggle_minimap_button.y,
@@ -244,11 +254,15 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, MAX_SCENARIOS, &data.focus_button_id)) {
         return;
     }
-    if (h->enter_pressed) {
+    if (input_box_handle_mouse(m_dialog, &player_name_input)) {
+        return;
+    }
+    if (input_box_is_accepted(&player_name_input)) {
         button_start_scenario(0, 0);
         return;
     }
     if (input_go_back_requested(m, h)) {
+        input_box_stop(&player_name_input);
         window_go_back();
     }
 }
@@ -268,7 +282,9 @@ static void button_select_item(int index, int param2)
 
 static void button_start_scenario(int param1, int param2)
 {
+    setting_set_player_name(player_name);
     if (game_file_start_scenario(data.selected_scenario_filename)) {
+        input_box_stop(&player_name_input);
         sound_music_update(1);
         window_city_show();
     }
