@@ -106,7 +106,7 @@ static void draw_background(void)
         image_draw(image_base, x_offset, y_offset);
     } else if (data.type == INTERMEZZO_WON) {
         if (scenario_is_custom()) {
-            image_draw(image_base + 2, x_offset, y_offset);
+            image_draw(image_base, x_offset, y_offset);
         } else {
             image_draw(image_base + 2 + 2 * mission, x_offset, y_offset);
         }
