@@ -355,11 +355,12 @@ void window_building_draw_warehouse(building_info_context *c)
     int cartpusher = b->figure_id;
     if (cartpusher && figure_get(cartpusher)->state == FIGURE_STATE_ALIVE) {
         int resource = figure_get(cartpusher)->resource_id;
-        if (resource) {
-            image_draw(image_group(GROUP_RESOURCE_ICONS) + resource +
-                resource_image_offset(resource, RESOURCE_IMAGE_ICON),
-                c->x_offset + 32, c->y_offset + 220);
+        if (!resource) {
+            resource = figure_get(cartpusher)->collecting_item_id;
         }
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + resource +
+            resource_image_offset(resource, RESOURCE_IMAGE_ICON),
+            c->x_offset + 32, c->y_offset + 220);
         lang_text_draw_multiline(99, 17, c->x_offset + 64, c->y_offset + 223,
             BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN);
     } else if (b->num_workers) {
